@@ -26,10 +26,9 @@ async def cmd_start(message: types.Message, state: FSMContext):
     user = await u.get_user(message.from_user.id)
     await state.finish()
     if not user:
-        await bot.send_photo(
+        await bot.send_message(
             message.from_user.id,
-            photo="https://downloader.disk.yandex.ru/preview/9d2d891eff5bdcbdf739cadea92fd663ac48550ab2f6b821950e37fdbb409989/64f62acb/xHT-fWY39LZs91HLXcfEWxQb2qQ4HXsPCPcN-Z9kMmNa5E03ZZHv2VTCL8xQdqongPdOZGWMyGrV8cfcdGCpng%3D%3D?uid=0&filename=%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%202023-09-04%20%D0%B2%2018.06.16.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048",
-            caption=f"Привет <b>{message.from_user.full_name}</b>!\n\nЯ бот, который будет отправлять тебе информацию о днях рождения твоих друзей <span class='tg-spoiler'>(ну или почти)</span>.\n\nКороче, тебе сейчас надо будет отправить в чат <b>пароль</b>, чтобы я мог понять что ты это ты. Паролем будет служить решение этого многомерного интеграла (точность 3 знака после запятой в формате <i>1,234</i>)\n\nЕсли будут какие-то проблемы, то пиши @appxpy",
+            text=f"Привет <b>{message.from_user.full_name}</b>!\n\nЯ бот, который будет отправлять тебе информацию о днях рождения твоих друзей <span class='tg-spoiler'>(ну или почти)</span>.\n\nКороче, тебе сейчас надо будет отправить в чат <b>пароль</b>, чтобы я мог понять что ты это ты.\n\nЕсли будут какие-то проблемы, то пиши @appxpy",
             parse_mode="HTML",
         )
         await AuthForm.password.set()
@@ -38,7 +37,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
 
 
 async def auth(message: types.Message, state: FSMContext):
-    if message.text.lower() == "иди нахуй":
+    if message.text.lower() == "БМВМ4":
         await message.answer("Пароль верный!")
         await u.create_user(
             message.from_user.id,
