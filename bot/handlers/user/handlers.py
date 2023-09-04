@@ -25,7 +25,7 @@ async def jobs(message: types.Message, state: FSMContext):
     jobs: List[Job] = scheduler.get_jobs()
     jobs_list = "\n".join(
         [
-            f"🕒 {job.trigger.run_date.strftime('%m/%d/%Y, %H:%M:%S')} - {job.name}"
+            f"🕒 {job.trigger.run_date.strftime('%d/%m/%Y, %H:%M:%S')} - {job.name}"
             for job in jobs
         ][: min(len(jobs), 10)]
     )
