@@ -64,9 +64,9 @@ async def schedule_birthday(phonetic: User, birthday: datetime, preference: str)
     ):
         birthday = birthday.replace(year=today.year + 1)
 
-    # DEBUG ONLY
-    birthday = datetime.now(tz=pytz.timezone("Europe/Moscow")) + timedelta(seconds=60)
-    # DEBUG ONLY
+    # # DEBUG ONLY
+    # birthday = datetime.now(tz=pytz.timezone("Europe/Moscow")) + timedelta(seconds=60)
+    # # DEBUG ONLY
 
     days_left = (birthday - today).days
     logger.debug(f"Days left: {days_left}")
@@ -77,12 +77,12 @@ async def schedule_birthday(phonetic: User, birthday: datetime, preference: str)
         birthday - timedelta(days=3), timezone=pytz.timezone("Europe/Moscow")
     )
 
-    # DEBUG ONLY
-    trigger = DateTrigger(
-        datetime.now(tz=pytz.timezone("Europe/Moscow")) + timedelta(seconds=30),
-        timezone=pytz.timezone("Europe/Moscow"),
-    )
-    # DEBUG ONLY
+    # # DEBUG ONLY
+    # trigger = DateTrigger(
+    #     datetime.now(tz=pytz.timezone("Europe/Moscow")) + timedelta(seconds=30),
+    #     timezone=pytz.timezone("Europe/Moscow"),
+    # )
+    # # DEBUG ONLY
     scheduler.add_job(
         notify_birthday,
         trigger,
@@ -94,12 +94,12 @@ async def schedule_birthday(phonetic: User, birthday: datetime, preference: str)
     trigger = DateTrigger(
         birthday - timedelta(days=1), timezone=pytz.timezone("Europe/Moscow")
     )
-    # DEBUG ONLY
-    trigger = DateTrigger(
-        datetime.now(tz=pytz.timezone("Europe/Moscow")) + timedelta(seconds=50),
-        timezone=pytz.timezone("Europe/Moscow"),
-    )
-    # DEBUG ONLY
+    # # DEBUG ONLY
+    # trigger = DateTrigger(
+    #     datetime.now(tz=pytz.timezone("Europe/Moscow")) + timedelta(seconds=50),
+    #     timezone=pytz.timezone("Europe/Moscow"),
+    # )
+    # # DEBUG ONLY
 
     scheduler.add_job(
         notify_birthday,
