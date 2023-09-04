@@ -27,7 +27,7 @@ services:
     restart: always
     env_file: .env
     expose:
-      - "$APP_PORT"
+      - 8000
     volumes:
       - .:/bot
     depends_on:
