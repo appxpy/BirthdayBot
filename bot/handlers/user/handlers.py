@@ -27,11 +27,14 @@ async def jobs(message: types.Message, state: FSMContext):
         [
             f"🕒 {job.trigger.run_date.strftime('%m/%d/%Y, %H:%M:%S')} - {job.name}"
             for job in jobs
-        ]
+        ][min(len(jobs), 10) :]
     )
+
     if not jobs_list:
         jobs_list = "\nПусто 😕\n"
-    await reply.edit_text(f"Вот все предстоящие уведомления: \n\n{jobs_list}")
+    await reply.edit_text(
+        f"Вот все предстоящие уведомления (первые 10): \n\n{jobs_list}"
+    )
 
 
 class Form(StatesGroup):

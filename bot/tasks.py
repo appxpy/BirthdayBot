@@ -43,8 +43,11 @@ async def notify_birthday(
         message = f"День рождения у <b>{phonetic.full_name}</b>{' ( @'+str(phonetic.username)+' )' if phonetic.username else ''} <b>сегодня</b>!\n\nЕго/её предпочтения:\n<b>{preference}</b>\n\nТочная дата: <b>{date}</b>\n\nНа подарок - 200 Руб. <code>2200700602143611</code> Анна."
 
     for user in users:
-        logger.debug(f"Sending message to {user.user_id}")
-        await bot.send_message(chat_id=user.user_id, text=message)
+        try:
+            logger.debug(f"Sending message to {user.user_id}")
+            await bot.send_message(chat_id=user.user_id, text=message)
+        except Exception:
+            logger.error(f"Failed to send message to user {user.user_id}")
 
 
 async def schedule_birthday(phonetic: User, birthday: datetime, preference: str):
