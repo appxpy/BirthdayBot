@@ -2,9 +2,9 @@ from aiogram.dispatcher.webhook import get_new_configured_app
 from aiohttp import web
 from loguru import logger
 
-from bot import logging, misc, handlers, database
-from bot.misc import dp, executor
 import config
+from bot import database, handlers, logging, misc
+from bot.misc import dp, executor, scheduler
 from server import server
 
 
@@ -28,6 +28,7 @@ async def on_shutdown(web_app: web.Application):
 
 def main():
     web_app = get_new_configured_app(dispatcher=dp, path=config.WEBHOOK_PATH)
+    scheduler.start()
 
     if config.WEBHOOK_USE:
         web_app.on_startup.append(on_startup)
@@ -40,5 +41,5 @@ def main():
         executor.start_polling()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

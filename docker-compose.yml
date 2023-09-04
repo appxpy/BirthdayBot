@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   redis:
@@ -26,8 +26,8 @@ services:
     build: .
     restart: always
     env_file: .env
-    ports:
-      - $APP_PORT:$APP_PORT
+    expose:
+      - $APP_PORT
     volumes:
       - .:/bot
     depends_on:
@@ -35,10 +35,13 @@ services:
       - db
     networks:
       - app-network
+      - proxy
 
 networks:
   app-network:
     driver: bridge
+  proxy:
+    external: true
 
 volumes:
   redis_data:

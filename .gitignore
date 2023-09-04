@@ -1,10 +1,11 @@
 .env
 
-venv/
+.venv/
 env/
 .idea/
 .vscode/
 logs/
 __pycache__/
+.mypy_cache/
 
 **.log
