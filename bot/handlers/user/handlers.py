@@ -27,7 +27,7 @@ async def jobs(message: types.Message, state: FSMContext):
         [
             f"🕒 {job.trigger.run_date.strftime('%m/%d/%Y, %H:%M:%S')} - {job.name}"
             for job in jobs
-        ][min(len(jobs), 10) :]
+        ][: min(len(jobs), 10)]
     )
 
     if not jobs_list:
