@@ -113,7 +113,10 @@ async def create_preference(callback_query: types.CallbackQuery, state: FSMConte
 async def create_preference_back(
     callback_query: types.CallbackQuery, state: FSMContext
 ):
-    await callback_query.message.delete()
+    try:
+        await callback_query.message.delete()
+    except Exception:
+        pass
     if callback_query.data == "ignore":
         return
     if callback_query.data == "back":
