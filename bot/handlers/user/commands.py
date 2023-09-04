@@ -37,7 +37,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
 
 
 async def auth(message: types.Message, state: FSMContext):
-    if message.text.lower() == "БМВМ4":
+    if message.text == "БМВМ4":
         await message.answer("Пароль верный!")
         await u.create_user(
             message.from_user.id,

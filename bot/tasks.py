@@ -34,13 +34,13 @@ async def notify_birthday(
         logger.error(f"User {birtday_user} not found")
         return
     if days_left > 4:
-        message = f"День рождения у <b>{phonetic.full_name}</b>{' ( @'+str(phonetic.username)+' )' if phonetic.username else ''} через <b>{days_left}</b> дней!\n\nЕго/её предпочтения:\n{preference}\n\nТочная дата: <b>{date}</b>"
+        message = f"День рождения у <b>{phonetic.full_name}</b>{' ( @'+str(phonetic.username)+' )' if phonetic.username else ''} через <b>{days_left}</b> дней!\n\nЕго/её предпочтения:\n{preference}\n\nТочная дата: <b>{date}</b>\n\nНа подарок - 200 Руб. <code>2200700602143611</code> Анна."
     elif days_left > 1:
-        message = f"День рождения у <b>{phonetic.full_name}</b>{' ( @'+str(phonetic.username)+' )' if phonetic.username else ''} через <b>{days_left}</b> дня!\n\nЕго/её предпочтения:\n<b>{preference}</b>\n\nТочная дата: <b>{date}</b>"
+        message = f"День рождения у <b>{phonetic.full_name}</b>{' ( @'+str(phonetic.username)+' )' if phonetic.username else ''} через <b>{days_left}</b> дня!\n\nЕго/её предпочтения:\n<b>{preference}</b>\n\nТочная дата: <b>{date}</b>\n\nНа подарок - 200 Руб. <code>2200700602143611</code> Анна."
     elif days_left == 1:
-        message = f"День рождения у <b>{phonetic.full_name}</b>{' ( @'+str(phonetic.username)+' )' if phonetic.username else ''} <b>завтра</b>!\n\nЕго/её предпочтения:\n<b>{preference}</b>\n\nТочная дата: <b>{date}</b>"
+        message = f"День рождения у <b>{phonetic.full_name}</b>{' ( @'+str(phonetic.username)+' )' if phonetic.username else ''} <b>завтра</b>!\n\nЕго/её предпочтения:\n<b>{preference}</b>\n\nТочная дата: <b>{date}</b>\n\nНа подарок - 200 Руб. <code>2200700602143611</code> Анна."
     else:
-        message = f"День рождения у <b>{phonetic.full_name}</b>{' ( @'+str(phonetic.username)+' )' if phonetic.username else ''} <b>сегодня</b>!\n\nЕго/её предпочтения:\n<b>{preference}</b>\n\nТочная дата: <b>{date}</b>"
+        message = f"День рождения у <b>{phonetic.full_name}</b>{' ( @'+str(phonetic.username)+' )' if phonetic.username else ''} <b>сегодня</b>!\n\nЕго/её предпочтения:\n<b>{preference}</b>\n\nТочная дата: <b>{date}</b>\n\nНа подарок - 200 Руб. <code>2200700602143611</code> Анна."
 
     for user in users:
         logger.debug(f"Sending message to {user.user_id}")
