@@ -28,6 +28,9 @@ async def on_shutdown(web_app: web.Application):
 
 def main():
     web_app = get_new_configured_app(dispatcher=dp, path=config.WEBHOOK_PATH)
+    logger.info(
+        "\n".join([f"({i.name} {i.trigger.run_date})" for i in scheduler.get_jobs()])
+    )
     scheduler.start()
 
     if config.WEBHOOK_USE:
