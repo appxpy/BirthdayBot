@@ -12,6 +12,10 @@ async def on_startup(web_app: web.Application):
     await logging.setup()
     await misc.setup()
     await database.setup()
+    scheduler.start()
+    logger.info(
+        "\n".join([f"({i.name} {i.trigger.run_date})" for i in scheduler.get_jobs()])
+    )
 
     logger.info("Configure webhook...")
     await dp.bot.delete_webhook()
@@ -28,10 +32,6 @@ async def on_shutdown(web_app: web.Application):
 
 def main():
     web_app = get_new_configured_app(dispatcher=dp, path=config.WEBHOOK_PATH)
-    scheduler.start()
-    logger.info(
-        "\n".join([f"({i.name} {i.trigger.run_date})" for i in scheduler.get_jobs()])
-    )
     if config.WEBHOOK_USE:
         web_app.on_startup.append(on_startup)
         web_app.on_shutdown.append(on_shutdown)
