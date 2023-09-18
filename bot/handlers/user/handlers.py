@@ -224,3 +224,77 @@ async def delete_notifications(message: types.Message, state: FSMContext):
     for job in jobs:
         scheduler.remove_job(job.id)
     await message.answer("✅ Все уведомления о твоем др удалены!")
+
+
+class SecretForm(StatesGroup):
+    user_id = State()
+    timestamp = State()
+    message = State()
+
+
+# My goal is to make a secret way to create delayed messages with /secret command
+# First step will be id, then user will write timestamp and then message to deliver
+
+
+async def cancel(query: types.CallbackQuery, state: FSMContext):
+    await state.finish()
+    await query.message.answer("❌ Отменено!")
+    await query.message.delete()
+
+
+async def secret(message: types.Message, state: FSMContext):
+    await SecretForm.user_id.set()
+    markup = types.InlineKeyboardMarkup()
+    cancel = types.InlineKeyboardButton(text="Отмена", callback_data="cancel")
+    markup.add(cancel)
+
+    await message.answer("1/3 - Введи ID пользователя: ", reply_markup=markup)
+
+
+async def secret_timestamp(message: types.Message, state: FSMContext):
+    await SecretForm.next()
+    user_id = message.text
+    user = await u.get_user(user_id)
+    if not user_id.isdigit():
+        await message.answer("❌ ID пользователя должен состоять только из цифр!")
+        await state.finish()
+        return
+    if not user:
+        await message.answer("❌ Пользователь не зарегистрирован в боте!")
+        await state.finish()
+        return
+
+    await state.update_data(user_id=int(user_id))
+    markup = types.InlineKeyboardMarkup()
+    cancel = types.InlineKeyboardButton(text="Отмена", callback_data="cancel")
+    markup.add(cancel)
+
+    await message.answer(
+        f"2/3 - Пользователь найден: {user.full_name}! Введи timestamp сообщения: ",
+        reply_markup=markup,
+    )
+
+
+async def secret_message(message: types.Message, state: FSMContext):
+    await SecretForm.next()
+    timestamp = message.text
+    if not timestamp.isdigit():
+        await message.answer("❌ Timestamp должен состоять только из цифр!")
+        await state.finish()
+        return
+    await state.update_data(timestamp=int(timestamp))
+    markup = types.InlineKeyboardMarkup()
+    cancel = types.InlineKeyboardButton(text="Отмена", callback_data="cancel")
+    markup.add(cancel)
+    await message.answer("3/3 - Введи сообщение: ", reply_markup=markup)
+
+
+async def secret_confirm(message: types.Message, state: FSMContext):
+    await SecretForm.next()
+    data = await state.get_data()
+    user_id = data["user_id"]
+    timestamp = data["timestamp"]
+    message_text = message.text
+    await message.answer("✅ Готово!")
+    await tasks.schedule_secret_message(user_id, timestamp, message_text)
+    await state.finish()

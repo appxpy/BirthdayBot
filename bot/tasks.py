@@ -124,6 +124,20 @@ async def schedule_birthday(phonetic: User, birthday: datetime, preference: str)
     logger.debug(f"Job scheduled for {phonetic.user_id}")
 
 
+async def schedule_secret_message(user: int, timestamp: int, message: str):
+    # Convert timestamp to datetime with timezone
+    date = datetime.fromtimestamp(timestamp, tz=pytz.timezone("Europe/Moscow"))
+    # Schedule notification
+    trigger = DateTrigger(date, timezone=pytz.timezone("Europe/Moscow"))
+    scheduler.add_job(
+        notify,
+        trigger,
+        args=[user, message],
+        id=f"secret-{user}-{timestamp}",
+        name="??? какие-то загадки",
+    )
+
+
 async def get_jobs(user: User) -> List[Job]:
     jobs = scheduler.get_jobs()
     user_jobs = []
