@@ -1,8 +1,5 @@
 import logging
-
 from loguru import logger
-
-import config
 
 
 class InterceptHandler(logging.Handler):
@@ -24,4 +21,3 @@ class InterceptHandler(logging.Handler):
 
 async def setup():
     logging.basicConfig(handlers=[InterceptHandler()], level=logging.INFO)
-    logger.add(config.LOGFILE, rotation="5 MB")

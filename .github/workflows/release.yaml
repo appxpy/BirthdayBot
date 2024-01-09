@@ -1,0 +1,64 @@
+name: Release as COI VM to Yandex.Cloud
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  IMAGE: cr.yandex/${{ secrets.YC_CR_REGISTRY_ID }}/${{ secrets.YC_CR_REGISTRY_REPOSITORY }}:${{ github.sha }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to Yandex Cloud Container Registry
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+      - name: Build, tag, and push image to Yandex Cloud Container Registry
+        env:
+          CR_REGISTRY: ${{ secrets.YC_CR_REGISTRY_ID }}
+          CR_REPOSITORY: ${{ secrets.YC_CR_REGISTRY_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build --platform linux/amd64 -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+
+      - name: Deploy COI VM
+        id: deploy-coi
+        uses: yc-actions/yc-coi-deploy@v2
+        env:
+          CR_REGISTRY: ${{ secrets.YC_CR_REGISTRY_ID }}
+          CR_REPOSITORY: ${{ secrets.YC_CR_REGISTRY_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE: ${{ env.IMAGE }}
+          YC_VM_USERNAME: ${{ secrets.YC_VM_USERNAME }}
+          YC_VM_SSH: ${{ secrets.YC_VM_SSH }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          SKIP_UPDATES: ${{ secrets.SKIP_UPDATES }}
+          OWNER_ID: ${{ secrets.OWNER_ID }}
+          WEBHOOK_USE: ${{ secrets.WEBHOOK_USE }}
+          WEBHOOK_HOST: ${{ secrets.WEBHOOK_HOST }}
+          WEBHOOK_PATH: ${{ secrets.WEBHOOK_PATH }}
+          WEBHOOK_PORT: ${{ secrets.WEBHOOK_PORT }}
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          YC_LOGS_GROUP_ID: ${{ secrets.YC_LOGS_GROUP_ID }}
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          folder-id: ${{ secrets.YC_VM_FOLDER_ID }}
+          vm-name: ${{ secrets.YC_VM_NAME }}
+          vm-service-account-id: ${{ secrets.YC_SA_ID }}
+          vm-cores: 2
+          vm-memory: 2Gb
+          vm-core-fraction: 100
+          vm-subnet-id: ${{ secrets.YC_VM_SUBNET_ID }}
+          vm-zone-id: ru-central1-b
+          user-data-path: './yandex-cloud/user-data.yaml'
+          docker-compose-path: './yandex-cloud/docker-compose.yc.yaml'

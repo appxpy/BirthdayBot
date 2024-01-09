@@ -14,7 +14,7 @@ async def on_startup(web_app: web.Application):
     await database.setup()
     scheduler.start()
     logger.info(
-        "\n".join([f"({i.name} {i.trigger.run_date})" for i in scheduler.get_jobs()])
+        ",".join([f"({i.name} {i.trigger.run_date})" for i in scheduler.get_jobs()])
     )
 
     logger.info("Configure webhook...")
@@ -36,7 +36,7 @@ def main():
         web_app.on_startup.append(on_startup)
         web_app.on_shutdown.append(on_shutdown)
         web_app = server.init_app(web_app)
-        web.run_app(web_app, **config.WEBHOOK_SERVER)
+        web.run_app(web_app, **config.WEBHOOK_SERVER, access_log=logger)
     else:
         executor.on_startup(on_startup)
         executor.on_shutdown(on_shutdown)

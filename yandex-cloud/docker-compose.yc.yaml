@@ -1,0 +1,43 @@
+version: "3.7"
+
+services:
+  bot:
+    platform: linux/amd64
+    image: {{ env.IMAGE }}
+    build: ..
+    restart: always
+    networks:
+      - default
+    environment:
+      - TELEGRAM_BOT_TOKEN={{ env.TELEGRAM_BOT_TOKEN }}
+      - SKIP_UPDATES={{ env.SKIP_UPDATES }}
+      - OWNER_ID={{ env.OWNER_ID }}
+      - WEBHOOK_USE={{ env.WEBHOOK_USE }}
+      - WEBHOOK_HOST={{ env.WEBHOOK_HOST }}
+      - WEBHOOK_PATH={{ env.WEBHOOK_PATH }}
+      - WEBHOOK_PORT={{ env.WEBHOOK_PORT }}
+      - POSTGRES_HOST={{ env.POSTGRES_HOST }}
+      - POSTGRES_USER={{ env.POSTGRES_USER }}
+      - POSTGRES_PORT={{ env.POSTGRES_PORT }}
+      - POSTGRES_PASSWORD={{ env.POSTGRES_PASSWORD }}
+      - POSTGRES_DB={{ env.POSTGRES_DB }}
+    ports:
+      - "80:8000"
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: app.logs
+
+  fluentbit:
+    container_name: fluentbit
+    image: cr.yandex/yc/fluent-bit-plugin-yandex:v1.0.3-fluent-bit-1.8.6
+    ports:
+      - 24224:24224
+      - 24224:24224/udp
+    restart: always
+    environment:
+      YC_GROUP_ID: {{ env.YC_LOGS_GROUP_ID }}
+    volumes:
+      - /etc/fluentbit/fluentbit.conf:/fluent-bit/etc/fluent-bit.conf
+      - /etc/fluentbit/parsers.conf:/fluent-bit/etc/parsers.conf

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytz
 from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.redis import RedisStorage2
+from AiogramStorages.storages import PGStorage
 from aiogram.utils.executor import Executor
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -14,7 +14,13 @@ import config
 ROOT_DIR: Path = Path(__file__).parent.parent
 
 loop = asyncio.get_event_loop()
-storage = RedisStorage2(host=config.REDIS_HOST, port=config.REDIS_PORT)
+storage = PGStorage(
+    username=config.POSTGRES_USER,
+    password=config.POSTGRES_PASSWORD,
+    host=config.POSTGRES_HOST,
+    port=config.POSTGRES_PORT,
+    db_name=config.POSTGRES_DB,
+)
 
 jobstores = {
     "default": SQLAlchemyJobStore(
@@ -30,7 +36,6 @@ scheduler = AsyncIOScheduler(
 )
 
 bot = Bot(token=config.TELEGRAM_BOT_TOKEN, parse_mode="HTML")
-# scheduler.ctx.add_instance(bot, declared_class=Bot)
 
 dp = Dispatcher(bot=bot, loop=loop, storage=storage)
 
