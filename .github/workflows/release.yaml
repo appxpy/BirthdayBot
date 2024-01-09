@@ -2,7 +2,7 @@ name: Release as COI VM to Yandex.Cloud
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 env:
   IMAGE: cr.yandex/${{ secrets.YC_CR_REGISTRY_ID }}/${{ secrets.YC_CR_REGISTRY_REPOSITORY }}:${{ github.sha }}
